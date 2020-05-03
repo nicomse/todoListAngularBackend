@@ -1,6 +1,6 @@
 const mongoose = require('mongoose');
 
-mongoose.connect('mongodb://localhost:27017/tasksDB', {useNewUrlParser: true }, (err) => {
+mongoose.connect('mongodb://localhost:27017/tasksDB', {useNewUrlParser: true, useUnifiedTopology: true }, (err) => {
     if(!err) {
         console.log('Mongo db connection succeded...');
     }else {  

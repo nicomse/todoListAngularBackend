@@ -6,7 +6,13 @@ const { mongoose } = require('./db');
 const cors = require('cors')
 
 
+
+
 //controllers
+
+//
+var userController = require('./controllers/userController');
+
 var taskController = require('./controllers/taskController');
 
 var app = express();
@@ -18,7 +24,8 @@ const corsOptions = {
 
 //app.use
 app.use(bodyParser.json());
-app.use('/tasks',taskController)
+app.use('/users',userController);
+app.use('/tasks',taskController);
 app.use(cors(corsOptions)); 
 
 

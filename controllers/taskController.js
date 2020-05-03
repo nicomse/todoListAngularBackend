@@ -4,7 +4,7 @@ var ObjectId = require('mongoose').Types.ObjectId;
 var { Task } = require('../models/task');
 
 // GET tasks/
-router.get('/', (req, res) => {
+router.get('/',verifyToken, (req, res) => {
     console.log('hola')
     Task.find((err,documents) => {
         if(!err) { res.send(documents); }
@@ -14,7 +14,7 @@ router.get('/', (req, res) => {
 
 
 // GET tasks/:id
-router.get('/:id', (req, res) => {
+router.get('/:id',verifyToken, (req, res) => {
     //check if is a valid id
     if(!ObjectId.isValid(req.params.id))
         return res.status(400).send('No record given with valid ID: ' + req.params.id);
@@ -26,7 +26,7 @@ router.get('/:id', (req, res) => {
 });
 
 // POST tasks/
-router.post('/',(req,res) =>{
+router.post('/',verifyToken,(req,res) =>{
     var myTask = new Task({
         title: req.body.title
     });
@@ -37,7 +37,7 @@ router.post('/',(req,res) =>{
 }); 
 
 // PUT tasks/:id
-router.put('/:id', (req,res) => {
+router.put('/:id',verifyToken, (req,res) => {
     //check if is a valid id
     if(!ObjectId.isValid(req.params.id))
     return res.status(400).send('No record given with valid ID: ' + req.params.id);
@@ -51,7 +51,7 @@ router.put('/:id', (req,res) => {
     });
 });
 
-router.delete('/:id', (req,res) =>{
+router.delete('/:id',verifyToken, (req,res) =>{
     //check if is a valid id
     if(!ObjectId.isValid(req.params.id))
     return res.status(400).send('No record given with valid ID: ' + req.params.id);
@@ -66,3 +66,16 @@ router.delete('/:id', (req,res) =>{
 
 
 module.exports = router;
+
+function verifyToken(req,res,next) {
+    if (!req.headers.authorization){
+        return res.status(401).send('Unauthorized request');
+    }
+    const token  = req.headers.authorization.split(' ')[1];
+    if(token === 'null') {
+        return res.status(401).send('Unauthorized request');
+    }
+    const payload = jwt.verifyToken(token, 'secretkey');
+    req.userId = payload._id;
+    next();
+}
