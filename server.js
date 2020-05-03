@@ -5,6 +5,9 @@ const bodyParser = require('body-parser');
 const { mongoose } = require('./db');
 const cors = require('cors')
 
+const port = process.env.PORT || 3000;
+
+
 
 //controllers
 var taskController = require('./controllers/taskController');
@@ -22,4 +25,4 @@ app.use('/tasks',taskController)
 app.use(cors(corsOptions)); 
 
 
-app.listen(3000, () => console.log('Server running on port 3000'))
+app.listen(port, () => console.log('Server running on port' + port))
